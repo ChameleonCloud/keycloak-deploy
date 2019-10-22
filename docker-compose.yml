@@ -1,0 +1,30 @@
+---
+version: '3.4'
+
+services:
+  keycloak:
+    image: docker.chameleoncloud.org/keycloak:dev
+    environment:
+      DB_VENDOR: mariadb
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak_pass
+      KEYCLOAK_LOGLEVEL: DEBUG
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+    ports:
+      - "8080:8080"
+
+  mariadb:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: keycloak_pass
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+volumes:
+  mariadb_data:
+    name: ${MARIADB_DOCKER_VOLUME}
+    driver: local
