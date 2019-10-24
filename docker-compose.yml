@@ -11,8 +11,10 @@ services:
       KEYCLOAK_LOGLEVEL: DEBUG
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
-    ports:
-      - "8080:8080"
+      VIRTUAL_HOST: ${VIRTUAL_HOST}
+      LETSENCRYPT_HOST: ${VIRTUAL_HOST}
+    expose:
+      - 8080
 
   mariadb:
     image: mariadb
@@ -24,7 +26,29 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
 
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    environment:
+      DEFAULT_EMAIL: ${EMAIL}
+    volumes:
+      - nginx_certs:/etc/nginx/certs
+      - nginx_vhost_d:/etc/nginx/vhost.d
+      - nginx_html:/usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  nginx:
+    image: jwilder/nginx-proxy
+    volumes:
+      - nginx_certs:/etc/nginx/certs
+      - nginx_vhost_d:/etc/nginx/vhost.d
+      - nginx_html:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    ports:
+      - 80:80
+      - 443:443
+
 volumes:
   mariadb_data:
-    name: ${MARIADB_DOCKER_VOLUME}
-    driver: local
+  nginx_certs:
+  nginx_vhost_d:
+  nginx_html:
