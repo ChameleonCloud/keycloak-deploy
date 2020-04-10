@@ -10,7 +10,7 @@ build:
 
 .PHONY: publish
 publish:
-	docker publish $(DOCKER_IMAGE)
+	docker push $(DOCKER_IMAGE)
 
 .PHONY: start
 start:
