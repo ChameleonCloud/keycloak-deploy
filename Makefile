@@ -1,5 +1,5 @@
 DOCKER_REGISTRY ?= docker.chameleoncloud.org
-DOCKER_TAG ?= $(shell git rev-parse --short HEAD)
+DOCKER_TAG ?= 7
 DOCKER_IMAGE = $(DOCKER_REGISTRY)/keycloak:$(DOCKER_TAG)
 DOCKER_IMAGE_DEV = $(DOCKER_REGISTRY)/keycloak:dev
 
@@ -7,6 +7,10 @@ DOCKER_IMAGE_DEV = $(DOCKER_REGISTRY)/keycloak:dev
 build:
 	docker build -t $(DOCKER_IMAGE) .
 	docker tag $(DOCKER_IMAGE) $(DOCKER_IMAGE_DEV)
+
+.PHONY: publish
+publish:
+	docker publish $(DOCKER_IMAGE)
 
 .PHONY: start
 start:
