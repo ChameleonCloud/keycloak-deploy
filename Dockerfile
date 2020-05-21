@@ -1,3 +1,4 @@
-FROM jboss/keycloak:7.0.1
+ARG KEYCLOAK_VERSION=10.0.1
+FROM jboss/keycloak:$KEYCLOAK_VERSION
 
 
